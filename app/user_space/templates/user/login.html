@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion</title>
+</head>
+<body>
+<h1>Se connecter</h1>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<form action="{% url 'user:connection' %}" method="post">
+    {% csrf_token %}
+    <label for="username">Identifiant</label><br>
+    <input type="text" name="username" id="username">
+    <label for="password">Mot de passe</label><br>
+    <input type="password" name="password" id="password">
+    <input type="submit" value="Se connecter">
+</form>
+</body>
+</html>
