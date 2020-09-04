@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+{% if user.is_authenticated %}
+<div class="card" style="width: 18rem;">
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Nom d'utilisateur : {{ user.username }}</li>
+        {% if user.first_name %}
+        <li class="list-group-item">Prénom : {{ user.first_name }}</li>
+        {% endif %}
+        {% if user.last_name %}
+        <li class="list-group-item">Nom : {{ user.last_name }}</li>
+        {% endif %}
+        {% if user.email %}
+        <li class="list-group-item">Email : {{ user.email }}</li>
+        {% endif %}
+    </ul>
+    <button type="button" id="update" class="update btn btn-sm btn-primary"
+            data-form-url="{% url 'modal:update' user.pk %}">
+        <span class="fa fa-pencil"></span>
+        Modifier ses informations
+    </button>
+    <a class="btn btn-sm btn-secondary" href="{% url 'logout' %}">Se déconnecter</a>
+</div>
+{% else %}
+<div class="btn-group">
+    <button id="signup" class="btn btn-primary" type="button" name="button">S'inscrire</button>
+    <button id="login" class="btn btn-secondary" type="button" name="button">Se Connecter</button>
+</div>
+{% endif %}
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    if ({{is_authenticated}}) {
+        $(".update").each(function () {
+          $(this).modalForm({
+              formURL: $(this).data('form-url')
+          });
+        });
+    } else {
+        $("#signup").modalForm({
+            formURL: "{% url 'modal:signup' %}"
+        });
+        $("#login").modalForm({
+            formURL: "{% url 'modal:login' %}"
+        });
+    }
+});
+
+</script>
+{% endblock %}
+
