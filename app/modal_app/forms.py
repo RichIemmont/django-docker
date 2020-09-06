@@ -7,9 +7,15 @@ class CustomUserUpdateForm(BSModalModelForm):
     class Meta:
         model = User
         fields = ['email']
-
+        labels = {
+            'email': 'Adresse email',
+        }
 
 class CustomAuthenticationForm(AuthenticationForm):
     class Meta:
         model = User
         fields = ['username', 'password']
+        labels = {
+            'username': 'Nom d\'utilisateur',
+            'password': 'Mot de passe',
+        }
