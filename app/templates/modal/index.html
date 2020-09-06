@@ -7,7 +7,7 @@
 </div>
 
 {% if user.is_authenticated %}
-<div class="card" style="width: 18rem;">
+<div id="user-card" class="card" style="width: 18rem;">
     <ul class="list-group list-group-flush">
         <li class="list-group-item">Nom d'utilisateur : {{ user.username }}</li>
         {% if user.first_name %}
@@ -36,12 +36,38 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    if ({{is_authenticated}}) {
-        $(".update").each(function () {
-          $(this).modalForm({
-              formURL: $(this).data('form-url')
-          });
-        });
+    if ({{ is_authenticated }}) {
+        let asyncSuccessMessage = [
+            "<div ",
+            "style='position:fixed;top:0;z-index:10000;width:100%;border-radius:0;' ",
+            "class='alert alert-icon alert-success alert-dismissible fade show mb-0' role='alert'>",
+            "Votre email a bien été mis à jour.",
+            "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>",
+            "<span aria-hidden='true'>&times;</span>",
+            "</button>",
+            "</div>",
+            "<script>",
+            "$('.alert').fadeTo(2000, 500).slideUp(500, function () {$('.alert').slideUp(500).remove();});",
+            "<\/script>"
+        ].join(' ');
+
+        function updateUserModalForm() {
+            $(".update").each(function () {
+                $(this).modalForm({
+                    formURL: $(this).data("form-url"),
+                    asyncUpdate: true,
+                    asyncSettings: {
+                        closeOnSubmit: true,
+                        successMessage: asyncSuccessMessage,
+                        dataUrl: "user/",
+                        dataElementId: "#user-card",
+                        dataKey: "table",
+                        addModalFormFunction: updateUserModalForm
+                    }
+                });
+            });
+        }
+        updateUserModalForm();
     } else {
         $("#signup").modalForm({
             formURL: "{% url 'modal:signup' %}"

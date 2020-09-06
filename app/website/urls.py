@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-
+from modal_app.views import index
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('user/', include('user_space.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('modal/', include('modal_test.urls')),
+    path('modal/', include('modal_app.urls')),
+    path('', index.as_view(), name='index')
 ]

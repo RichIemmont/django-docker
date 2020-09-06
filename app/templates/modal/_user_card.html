@@ -1,0 +1,22 @@
+{% block user_card %}
+<div id="user-card" class="card" style="width: 18rem;">
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Nom d'utilisateur : {{ user.username }}</li>
+        {% if user.first_name %}
+        <li class="list-group-item">Prénom : {{ user.first_name }}</li>
+        {% endif %}
+        {% if user.last_name %}
+        <li class="list-group-item">Nom : {{ user.last_name }}</li>
+        {% endif %}
+        {% if user.email %}
+        <li class="list-group-item">Email : {{ user.email }}</li>
+        {% endif %}
+    </ul>
+    <button type="button" id="update" class="update btn btn-sm btn-primary"
+            data-form-url="{% url 'modal:update' user.pk %}">
+        <span class="fa fa-pencil"></span>
+        Modifier ses informations
+    </button>
+    <a class="btn btn-sm btn-secondary" href="{% url 'logout' %}">Se déconnecter</a>
+</div>
+{% endblock %}

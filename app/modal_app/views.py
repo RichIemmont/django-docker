@@ -1,5 +1,8 @@
 from django.urls import reverse_lazy
 from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.http import JsonResponse
+from django.views import View
 from django.contrib.auth.forms import UserCreationForm
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalUpdateView, BSModalLoginView
 from bootstrap_modal_forms.mixins import PopRequestMixin, CreateUpdateAjaxMixin
@@ -7,10 +10,11 @@ from .forms import CustomUserUpdateForm, CustomAuthenticationForm
 from django.contrib.auth.models import User
 
 
-def index(request):
-    if request.user.is_authenticated:
-        return render(request, 'modal/index.html', {'user': request.user, 'is_authenticated': 1})
-    return render(request, 'modal/index.html', {'is_authenticated': 0})
+class index(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return render(request, 'modal/index.html', {'user': request.user, 'is_authenticated': 1})
+        return render(request, 'modal/index.html', {'is_authenticated': 0})
 
 
 class CustomUserCreationForm(PopRequestMixin, CreateUpdateAjaxMixin, UserCreationForm):
@@ -40,3 +44,14 @@ class UpdateView(BSModalUpdateView):
     success_message = 'Success: Your email has been updated.'
     success_url = reverse_lazy('modal:index')
 
+
+class user(View):
+    def get(self, request):
+        data = dict()
+        if request.user.is_authenticated:
+            data['table'] = render_to_string(
+                'modal/_user_card.html',
+                {'user': request.user},
+                request=request
+            )
+            return JsonResponse(data)
